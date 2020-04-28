@@ -4,11 +4,9 @@ var file = require(fileName);
 
 console.log(file);
 firstArray = [];
-
 for (let [key1, value2] of Object.entries(file)) {
     firstArray.push(value2.id);
 }
-
 function find_duplicate_in_array(arra1) {
     var object = {};
     var result = [];
@@ -27,14 +25,12 @@ function find_duplicate_in_array(arra1) {
     deletedups(result);
     return result;
 }
-
 console.log(find_duplicate_in_array(firstArray));
 function deletedups(result) {
     for (i = 0; i < result.length; i++) {
         deletedups2(parseInt(result[i]));
     }
 }
-
 function deletedups2(result2) {
     d = 0;
     for (let [key, value] of Object.entries(file)) {
@@ -46,7 +42,6 @@ function deletedups2(result2) {
         }
     }
 }
-
 console.log(file);
 writeJSON();
 function writeJSON(){
@@ -55,5 +50,3 @@ function writeJSON(){
     });
 };
 console.log(file.length);
-
-

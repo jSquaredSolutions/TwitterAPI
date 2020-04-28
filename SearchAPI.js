@@ -1,6 +1,6 @@
 var request = require('request');
 var fs = require('fs');
-var fileName = './TwitterData.json';
+var fileName = './SearchAPI_results.json';
 var file = require(fileName);
 
 /* encode to base64 to but this in Auth header 
@@ -11,8 +11,7 @@ encodedData = Buffer.from(concatSecretAndKey).toString('base64');
 
 I run this via REPL in node and copy the results
 
-*/ 
-lastCallRecurCount = 0;
+*/
 
 var options = {
     'method': 'POST',
@@ -35,7 +34,7 @@ request(options, function (error, response) {
 function nextCall(bearer) {
     var options = {
         'method': 'GET',
-        'url': 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=199&screen_name=EPAresearch',
+        'url': 'https://api.twitter.com/1.1/search/tweets.json?q=CompTox&count=100',
         'headers': {
             'User-Agent': 'My Twitter App v1.0.23',
             'Authorization': 'Bearer ' + bearer
@@ -44,25 +43,22 @@ function nextCall(bearer) {
     request(options, function (error, response) {
         if (error) throw new Error(error);
         ParseResponse = JSON.parse(response.body);
-        var keys = Object.keys(ParseResponse);
+        var keys = Object.keys(ParseResponse.statuses);
         var last = keys[keys.length - 1];
-        for (const property in ParseResponse) {
-            file.push({ id: ParseResponse[property].id_str, created: ParseResponse[property].created_at, text: ParseResponse[property].text, retweets: ParseResponse[property].retweet_count, favorites: ParseResponse[property].favorite_count });
-            if (property == last) {
-                var lastID = ParseResponse[property].id_str;
-            }
+        for (const property in ParseResponse.statuses) {
+            file.push({ id: ParseResponse.statuses[property].id_str, created_at: ParseResponse.statuses[property].created_at });
         }
         fs.writeFile(fileName, JSON.stringify(file), function (err) {
             if (err) return console.log(err);
         });
-        lastCallRecur(bearer, lastID)
+        lastCallRecur(bearer, ParseResponse.search_metadata.next_results)
     });
 };
 
 function lastCallRecur(bearer, lastID) {
     var options = {
         'method': 'GET',
-        'url': 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=199&screen_name=EPAresearch&max_id=' + lastID,
+        'url': 'https://api.twitter.com/1.1/search/tweets.json' + lastID,
         'headers': {
             'User-Agent': 'My Twitter App v1.0.23',
             'Authorization': 'Bearer ' + bearer
@@ -71,22 +67,14 @@ function lastCallRecur(bearer, lastID) {
     request(options, function (error, response) {
         if (error) throw new Error(error);
         ParseResponse = JSON.parse(response.body);
-        var keys = Object.keys(ParseResponse);
-        var last = keys[keys.length - 1];
-        for (const property in ParseResponse) {
-            file.push({ id: ParseResponse[property].id_str, created: ParseResponse[property].created_at, text: ParseResponse[property].text, retweets: ParseResponse[property].retweet_count, favorites: ParseResponse[property].favorite_count, entitiesnode: ParseResponse[property].entities});
-            if (property == last) {
-                var lastID = ParseResponse[property].id_str;
-            }
+       // var keys = Object.keys(ParseResponse);
+       // var last = keys[keys.length - 1];
+        for (const property in ParseResponse.statuses) {
+            file.push({ id: ParseResponse.statuses[property].id_str});
         }
         fs.writeFile(fileName, JSON.stringify(file), function (err) {
             if (err) return console.log(err);
         });
-        lastCallRecurCount++;
-        if (lastCallRecurCount == 40){
-            return
-        } else {
-            lastCallRecur(bearer, lastID);
-        }     
+     //   lastCallRecur(bearer, lastID);
     });
 }; 

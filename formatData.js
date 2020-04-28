@@ -4,15 +4,21 @@ var file = require(fileName);
 var fileName1 = './DataAg.json';
 var file1 = require(fileName1);
 
-year2018 = 0;
-year2019 = 0;
-year2020 = 0;
-hashtagComptox2018 = 0;
-hashtagComptox2019 = 0;
-hashtagComptox2020 = 0;
-retweetsComptox2018 = 0;
-retweetsComptox2019 = 0;
-retweetsComptox2020 = 0;
+/* Empty the array in DataAg.json */
+file1 = [];
+fs.writeFile(fileName1, JSON.stringify(file1), function (err) {
+    if (err) return console.log(err);
+});
+
+year2018 = 0; // 1st array value
+year2019 = 0; // 2 array value
+year2020 = 0; // 3 array value
+hashtagComptox2018 = 0; // 4 array value
+hashtagComptox2019 = 0; // 5 array value
+hashtagComptox2020 = 0; // 6 array value
+retweetsComptox2018 = 0; // 7 array value
+retweetsComptox2019 = 0; // 8 array value
+retweetsComptox2020 = 0; // 9 array value
 
 for (let [key1, value2] of Object.entries(file)) {
     dStr = value2.created;
@@ -40,11 +46,11 @@ for (let [key1, value2] of Object.entries(file)) {
             }
         }
     }
-    
+
     if (d.getFullYear() == 2018) {
         retweetsComptox2018 += value2.retweets;
     };
-    
+
     if (d.getFullYear() == 2019) {
         retweetsComptox2019 += value2.retweets;
     };

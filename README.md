@@ -30,3 +30,8 @@ same day 3429
 
 04/28/2020
 Total Records 3437
+
+Change id to id_str because JS will round off such a large number
+
+Total Records 
+3248
