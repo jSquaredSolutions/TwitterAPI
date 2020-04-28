@@ -12,6 +12,7 @@ encodedData = Buffer.from(concatSecretAndKey).toString('base64');
 I run this via REPL in node and copy the results
 
 */ 
+lastCallRecurCount = 0;
 
 var options = {
     'method': 'POST',
@@ -23,6 +24,7 @@ var options = {
         'Content-Length': '29'
     }
 };
+
 request(options, function (error, response) {
     if (error) throw new Error(error);
     ParseResponse = JSON.parse(response.body);
@@ -57,7 +59,6 @@ function nextCall(bearer) {
     });
 };
 
-
 function lastCallRecur(bearer, lastID) {
     var options = {
         'method': 'GET',
@@ -81,6 +82,11 @@ function lastCallRecur(bearer, lastID) {
         fs.writeFile(fileName, JSON.stringify(file), function (err) {
             if (err) return console.log(err);
         });
-        lastCallRecur(bearer, lastID);
+        lastCallRecurCount++;
+        if (lastCallRecurCount == 100){
+            lastCallRecur(bearer, lastID);
+        } else {
+            return;
+        }     
     });
 }; 

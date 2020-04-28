@@ -10,6 +10,9 @@ year2020 = 0;
 hashtagComptox2018 = 0;
 hashtagComptox2019 = 0;
 hashtagComptox2020 = 0;
+retweetsComptox2018 = 0;
+retweetsComptox2019 = 0;
+retweetsComptox2020 = 0;
 
 for (let [key1, value2] of Object.entries(file)) {
     dStr = value2.created;
@@ -22,21 +25,34 @@ for (let [key1, value2] of Object.entries(file)) {
     } else {
         year2020++;
     };
-    if (value2.entitiesnode){
-        if (value2.entitiesnode.hashtags){
-            if (value2.entitiesnode.hashtags.length > 0){
-                if (value2.entitiesnode.hashtags[0].text == "CompTox" && d.getFullYear() == 2018){
+    if (value2.entitiesnode) {
+        if (value2.entitiesnode.hashtags) {
+            if (value2.entitiesnode.hashtags.length > 0) {
+                if (value2.entitiesnode.hashtags[0].text == "CompTox" && d.getFullYear() == 2018) {
                     hashtagComptox2018++;
                 }
-                if (value2.entitiesnode.hashtags[0].text == "CompTox" && d.getFullYear() == 2019){
+                if (value2.entitiesnode.hashtags[0].text == "CompTox" && d.getFullYear() == 2019) {
                     hashtagComptox2019++;
                 }
-                if (value2.entitiesnode.hashtags[0].text == "CompTox" && d.getFullYear() == 2020){
+                if (value2.entitiesnode.hashtags[0].text == "CompTox" && d.getFullYear() == 2020) {
                     hashtagComptox2020++;
                 }
             }
         }
     }
+    
+    if (d.getFullYear() == 2018) {
+        retweetsComptox2018 += value2.retweets;
+    };
+    
+    if (d.getFullYear() == 2019) {
+        retweetsComptox2019 += value2.retweets;
+    };
+
+    if (d.getFullYear() == 2020) {
+        retweetsComptox2020 += value2.retweets;
+    };
+
     dStr2 = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
     value2.created = dStr2;
 }
@@ -47,6 +63,9 @@ file1.push(year2020);
 file1.push(hashtagComptox2018);
 file1.push(hashtagComptox2019);
 file1.push(hashtagComptox2020);
+file1.push(retweetsComptox2018);
+file1.push(retweetsComptox2019);
+file1.push(retweetsComptox2020);
 
 fs.writeFile(fileName, JSON.stringify(file), function (err) {
     if (err) return console.log(err);

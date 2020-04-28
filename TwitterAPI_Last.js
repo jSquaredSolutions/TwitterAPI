@@ -1,3 +1,6 @@
+/* Instead recursivly getting all records, this script will obtain the
+most recent. 
+
 var request = require('request');
 var fs = require('fs');
 var fileName = './TwitterData.json';
