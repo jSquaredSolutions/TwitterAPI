@@ -3,170 +3,297 @@
 
 <head>
   <style>
+    body {
+      font-family: "Arial", sans-serif;
+    }
+
+    .button--style-red {
+    text-decoration: none;
+    border-radius: 2px;
+    border-color: black;
+    padding-right: 10px;
+    font-weight: bold;
+    padding-left: 10px;
+    background: lightblue;
+    }
+
+    .bar {
+      fill: #5f89ad;
+    }
+
     .axis {
-      font: 10px sans-serif;
+      font-size: 13px;
     }
 
     .axis path,
     .axis line {
       fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
+      display: none;
+    }
+
+    .label {
+      font-size: 13px;
     }
   </style>
 </head>
 
 <body>
+  <img src="Capture.JPG" />
+  <div id="main" style="padding-left: 260px;">
+    <h2>Total Tweets for 2018: <span style='text-decoration: underline;'>1085</span></h2>
+    <a href="DataVis2018.html" class="button--style-red">2018</a>
+    <a href="DataVis2019.html" class="button--style-red">2019</a>
+    <a href="DataVis2020.html" class="button--style-red">2020</a>
+    <h3>Top 10 retweets</h3>
 
-  <h1>Total Tweets for 2018:</h1>
-  <a href="DataVis2018.html" class="button--style-red">2018</a>
-  <a href="DataVis2019.html" class="button--style-red">2019</a>
-  <a href="DataVis2020.html" class="button--style-red">2020</a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <div id="graphic"></div>
+    <script>
+      var data = [
+        {
+          "name": "1",
+          "value": 14909
+        },
+        {
+          "name": "2",
+          "value": 4491
+        },
+        {
+          "name": "3",
+          "value": 4061
+        },
+        {
+          "name": "4",
+          "value": 3897
+        },
+        {
+          "name": "5",
+          "value": 2600
+        },
+        {
+          "name": "6",
+          "value": 1618
+        },
+        {
+          "name": "7",
+          "value": 1352
+        },
+        {
+          "name": "8",
+          "value": 1324
+        },
+        {
+          "name": "9",
+          "value": 1119
+        },
+        {
+          "name": "10",
+          "value": 929
+        }
+      ];
 
-  <h3>Top 10 retweets:1085</h3>
+      //sort bars based on value
+      data = data.sort(function (a, b) {
+        return d3.ascending(a.value, b.value);
+      })
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+      //set up svg using margin conventions - we'll need plenty of room on the left for labels
+      var margin = {
+        top: 15,
+        right: 25,
+        bottom: 15,
+        left: 60
+      };
 
-  <script>
+      var width = 760 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
-    var margin = { top: 20, right: 20, bottom: 70, left: 40 },
-      width = 600 - margin.left - margin.right,
-      height = 300 - margin.top - margin.bottom;
+      var svg = d3.select("#graphic").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // Parse the date / time
-    var parseDate = d3.time.format("%Y-%m").parse;
+      var x = d3.scale.linear()
+        .range([0, width])
+        .domain([0, d3.max(data, function (d) {
+          return d.value;
+        })]);
 
-    var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+      var y = d3.scale.ordinal()
+        .rangeRoundBands([height, 0], .1)
+        .domain(data.map(function (d) {
+          return d.name;
+        }));
 
-    var y = d3.scale.linear().range([height, 0]);
+      //make y axis to show bar names
+      var yAxis = d3.svg.axis()
+        .scale(y)
+        //no tick marks
+        .tickSize(0)
+        .orient("left");
 
-    var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom")
-      .tickFormat(d3.time.format("%Y-%m"));
-
-    var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left")
-      .ticks(10);
-
-    var svg1 = d3.select("body").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .attr("display", "block")
-      .append("g")
-      .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
-
-    d3.json("bar-data.json", function (error, data) {
-      data.forEach(function (d) {
-        d.date = parseDate(d.date);
-        d.value = +d.value;
-      });
-      x.domain(data.map(function (d) { return d.date; }));
-      y.domain([0, d3.max(data, function (d) { return d.value; })]);
-
-      svg1.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", "-.55em")
-        .attr("transform", "rotate(-90)");
-
-      svg1.append("g")
+      var gy = svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Value ($)");
 
-      svg1.selectAll("bar")
+      var bars = svg.selectAll(".bar")
         .data(data)
-        .enter().append("rect")
-        .style("fill", "steelblue")
-        .attr("x", function (d) { return x(d.date); })
-        .attr("width", x.rangeBand())
-        .attr("y", function (d) { return y(d.value); })
-        .attr("height", function (d) { return height - y(d.value); });
-    });
+        .enter()
+        .append("g")
 
-  </script>
-  <h3>Top 10 hashtags used:</h3>
-  <script>
+      //append rects
+      bars.append("rect")
+        .attr("class", "bar")
+        .attr("y", function (d) {
+          return y(d.name);
+        })
+        .attr("height", y.rangeBand())
+        .attr("x", 0)
+        .attr("width", function (d) {
+          return x(d.value);
+        });
 
-    var margin = { top: 20, right: 20, bottom: 70, left: 40 },
-      width = 600 - margin.left - margin.right,
-      height = 300 - margin.top - margin.bottom;
+      //add a value label to the right of each bar
+      bars.append("text")
+        .attr("class", "label")
+        //y position of the label is halfway down the bar
+        .attr("y", function (d) {
+          return y(d.name) + y.rangeBand() / 2 + 4;
+        })
+        //x position is 3 pixels to the right of the bar
+        .attr("x", function (d) {
+          return x(d.value) + 3;
+        })
+        .text(function (d) {
+          return d.value;
+        });
 
-    // Parse the date / time
-    var parseDate = d3.time.format("%Y-%m").parse;
+    </script>
+    <h3>Top 10 hashtags used:</h3>
+    <div id="graphic2"></div>
+    <script>
+      var data = [
+        {
+          "name": "PublicHealth",
+          "value": 46
+        },
+        {
+          "name": "STEM",
+          "value": 41
+        },
+        {
+          "name": "EPAsbir",
+          "value": 36
+        },
+        {
+          "name": "EPAer",
+          "value": 31
+        },
+        {
+          "name": "SmokeSense",
+          "value": 28
+        },
+        {
+          "name": "SaferChemicalsResearch",
+          "value": 25
+        },
+        {
+          "name": "Comptox",
+          "value": 24
+        },
+        {
+          "name": "EPAp3",
+          "value": 22
+        },
+        {
+          "name": "EnviroAtlas",
+          "value": 20
+        },
+        {
+          "name": "CitizenScience",
+          "value": 19
+        }
+      ];
 
-    var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+      //sort bars based on value
+      data = data.sort(function (a, b) {
+        return d3.ascending(a.value, b.value);
+      })
 
-    var y = d3.scale.linear().range([height, 0]);
+      //set up svg using margin conventions - we'll need plenty of room on the left for labels
+      var margin = {
+        top: 15,
+        right: 25,
+        bottom: 15,
+        left: 60
+      };
 
-    var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom")
-      .tickFormat(d3.time.format("%Y-%m"));
+      var width = 760 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
 
-    var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left")
-      .ticks(10);
+      var svg = d3.select("#graphic2").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var svg = d3.select("body").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .attr("display", "block")
-      .append("g")
-      .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
+      var x = d3.scale.linear()
+        .range([0, width])
+        .domain([0, d3.max(data, function (d) {
+          return d.value;
+        })]);
 
-    d3.json("bar-data.json", function (error, data) {
-      data.forEach(function (d) {
-        d.date = parseDate(d.date);
-        d.value = +d.value;
-      });
+      var y = d3.scale.ordinal()
+        .rangeRoundBands([height, 0], .1)
+        .domain(data.map(function (d) {
+          return d.name;
+        }));
 
-      x.domain(data.map(function (d) { return d.date; }));
-      y.domain([0, d3.max(data, function (d) { return d.value; })]);
+      //make y axis to show bar names
+      var yAxis = d3.svg.axis()
+        .scale(y)
+        //no tick marks
+        .tickSize(0)
+        .orient("left");
 
-      svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", "-.55em")
-        .attr("transform", "rotate(-90)");
-
-      svg.append("g")
+      var gy = svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Value ($)");
 
-      svg.selectAll("bar")
+      var bars = svg.selectAll(".bar")
         .data(data)
-        .enter().append("rect")
-        .style("fill", "steelblue")
-        .attr("x", function (d) { return x(d.date); })
-        .attr("width", x.rangeBand())
-        .attr("y", function (d) { return y(d.value); })
-        .attr("height", function (d) { return height - y(d.value); });
-    });
+        .enter()
+        .append("g")
 
-  </script>
+      //append rects
+      bars.append("rect")
+        .attr("class", "bar")
+        .attr("y", function (d) {
+          return y(d.name);
+        })
+        .attr("height", y.rangeBand())
+        .attr("x", 0)
+        .attr("width", function (d) {
+          return x(d.value);
+        });
+
+      //add a value label to the right of each bar
+      bars.append("text")
+        .attr("class", "label")
+        //y position of the label is halfway down the bar
+        .attr("y", function (d) {
+          return y(d.name) + y.rangeBand() / 2 + 4;
+        })
+        //x position is 3 pixels to the right of the bar
+        .attr("x", function (d) {
+          return x(d.value) + 3;
+        })
+        .text(function (d) {
+          return d.value;
+        });
+
+    </script>
+  </div>
+  <img src="Capture2.JPG" />
 </body>

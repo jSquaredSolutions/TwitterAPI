@@ -11,7 +11,7 @@ var server = http.createServer(function (request, response) {
             response.write("This is Test Message.");
             response.end();
             break;
-            case '/DataVis2018.html':
+        case '/DataVis2018.html':
             fs.readFile(__dirname + path, function (error, data) {
                 if (error) {
                     response.writeHead(404);
@@ -26,51 +26,96 @@ var server = http.createServer(function (request, response) {
                 }
             });
             break;
-            case '/bar-data.json':
-                fs.readFile(__dirname + path, function (error, data) {
-                    if (error) {
-                        response.writeHead(404);
-                        response.write(error);
-                        response.end();
-                    } else {
-                        response.writeHead(200, {
-                            'Content-Type': 'text/html'
-                        });
-                        response.write(data);
-                        response.end();
-                    }
-                });
-                break;
-                case '/DataVis2019.html':
-                fs.readFile(__dirname + path, function (error, data) {
-                    if (error) {
-                        response.writeHead(404);
-                        response.write(error);
-                        response.end();
-                    } else {
-                        response.writeHead(200, {
-                            'Content-Type': 'text/html'
-                        });
-                        response.write(data);
-                        response.end();
-                    }
-                });
-                break;
-                case '/DataVis2020.html':
-                fs.readFile(__dirname + path, function (error, data) {
-                    if (error) {
-                        response.writeHead(404);
-                        response.write(error);
-                        response.end();
-                    } else {
-                        response.writeHead(200, {
-                            'Content-Type': 'text/html'
-                        });
-                        response.write(data);
-                        response.end();
-                    }
-                });
-                break;
+        case '/HashTags2018.json':
+            fs.readFile(__dirname + path, function (error, data) {
+                if (error) {
+                    response.writeHead(404);
+                    response.write(error);
+                    response.end();
+                } else {
+                    response.writeHead(200, {
+                        'Content-Type': 'text/html'
+                    });
+                    response.write(data);
+                    response.end();
+                }
+            });
+            break;
+        case '/Retweets2018.json':
+            fs.readFile(__dirname + path, function (error, data) {
+                if (error) {
+                    response.writeHead(404);
+                    response.write(error);
+                    response.end();
+                } else {
+                    response.writeHead(200, {
+                        'Content-Type': 'text/html'
+                    });
+                    response.write(data);
+                    response.end();
+                }
+            });
+            break;
+        case '/Capture2.JPG':
+            fs.readFile(__dirname + path, function (error, data) {
+                if (error) {
+                    response.writeHead(404);
+                    response.write(error);
+                    response.end();
+                } else {
+                    response.writeHead(200, {
+                        'Content-Type': 'text/html'
+                    });
+                    response.write(data);
+                    response.end();
+                }
+            });
+            break;
+        case '/Capture.JPG':
+            fs.readFile(__dirname + path, function (error, data) {
+                if (error) {
+                    response.writeHead(404);
+                    response.write(error);
+                    response.end();
+                } else {
+                    response.writeHead(200, {
+                        'Content-Type': 'text/html'
+                    });
+                    response.write(data);
+                    response.end();
+                }
+            });
+            break;
+        case '/DataVis2019.html':
+            fs.readFile(__dirname + path, function (error, data) {
+                if (error) {
+                    response.writeHead(404);
+                    response.write(error);
+                    response.end();
+                } else {
+                    response.writeHead(200, {
+                        'Content-Type': 'text/html'
+                    });
+                    response.write(data);
+                    response.end();
+                }
+            });
+            break;
+        case '/DataVis2020.html':
+            fs.readFile(__dirname + path, function (error, data) {
+                if (error) {
+                    response.writeHead(404);
+                    response.write(error);
+                    response.end();
+                } else {
+                    response.writeHead(200, {
+                        'Content-Type': 'text/html'
+                    });
+                    response.write(data);
+                    response.end();
+                }
+            });
+            break;
         default:
             response.writeHead(404);
             response.write("opps this doesn't exist - 404");

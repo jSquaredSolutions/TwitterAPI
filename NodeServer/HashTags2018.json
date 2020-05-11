@@ -1,0 +1,42 @@
+[
+    {
+        "date": "PublicHealth",
+        "value": 46
+    },
+    {
+        "date": "STEM",
+        "value": 41
+    },
+    {
+        "date": "EPAsbir",
+        "value": 36
+    },
+    {
+        "date": "EPAer",
+        "value": 31
+    },
+    {
+        "date": "SmokeSense",
+        "value": 28
+    },
+    {
+        "date": "SaferChemicalsResearch",
+        "value": 25
+    },
+    {
+        "date": "Comptox",
+        "value": 24
+    },
+    {
+        "date": "EPAp3",
+        "value": 22
+    },
+    {
+        "date": "EnviroAtlas",
+        "value": 20
+    },
+    {
+        "date": "CitizenScience",
+        "value": 19
+    }
+]
