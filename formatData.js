@@ -4,33 +4,29 @@ var file = require(fileName);
 var fileName1 = './DataAg.json';
 var file1 = require(fileName1);
 
+
 /* Empty the array in DataAg.json */
 file1 = [];
 fs.writeFile(fileName1, JSON.stringify(file1), function (err) {
     if (err) return console.log(err);
 });
 
-year2018 = 0; // 1st array value
-year2019 = 0; // 2 array value
+
 year2020 = 0; // 3 array value
-hashtagComptox2018 = 0; // 4 array value
-hashtagComptox2019 = 0; // 5 array value
 hashtagComptox2020 = 0; // 6 array value
-retweetsComptox2018 = 0; // 7 array value
-retweetsComptox2019 = 0; // 8 array value
 retweetsComptox2020 = 0; // 9 array value
 
 for (let [key1, value2] of Object.entries(file)) {
     dStr = value2.created;
     dStr = dStr.replace("+0000 ", "") + " UTC";
     var d = new Date(dStr);
-    if (d.getFullYear() == 2018) {
-        year2018++;
-    } else if (d.getFullYear() == 2019) {
-        year2019++;
-    } else {
+    
+    // Count total tweets per year
+    if (d.getFullYear() == 2020) {
         year2020++;
-    };
+    } 
+
+    // Count total tweet that have the hashtag comptox
     if (value2.entitiesnode) {
         if (value2.entitiesnode.hashtags) {
             if (value2.entitiesnode.hashtags.length > 0) {
@@ -46,20 +42,10 @@ for (let [key1, value2] of Object.entries(file)) {
             }
         }
     }
-
-    if (d.getFullYear() == 2018) {
-        retweetsComptox2018 += value2.retweets;
-    };
-
-    if (d.getFullYear() == 2019) {
-        retweetsComptox2019 += value2.retweets;
-    };
-
-    if (d.getFullYear() == 2020) {
-        retweetsComptox2020 += value2.retweets;
-    };
-
+    
+    // set dStr2 to the date format needed
     dStr2 = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    // set that date format in the .json file
     value2.created = dStr2;
 }
 
@@ -82,4 +68,6 @@ fs.writeFile(fileName1, JSON.stringify(file1), function (err) {
     if (err) return console.log(err);
     console.log("Done writing");
 });
+
+
 

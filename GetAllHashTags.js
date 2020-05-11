@@ -1,18 +1,21 @@
 var fs = require('fs');
 var fileName = './TwitterData.json';
 var file = require(fileName);
-var fileName1 = './hashTags.json';
+var fileName1 = './hashTags_2020.json';
 var file1 = require(fileName1);
 
 for (let [key1, value2] of Object.entries(file)) {
-    if (value2.entitiesnode) {
-        if (value2.entitiesnode.hashtags) {
-            if (value2.entitiesnode.hashtags.length > 0) {
-                   value2.entitiesnode.hashtags.forEach(myFunction);
-                   function myFunction(item, index) {
-                    //AllHashTags.push(value2.entitiesnode.hashtags[index].text);                   }
-                    file1.push(item.text);
-                }   
+    var d = new Date(value2.created);
+    if (d.getFullYear() == 2020) {
+        if (value2.entitiesnode) {
+            if (value2.entitiesnode.hashtags) {
+                if (value2.entitiesnode.hashtags.length > 0) {
+                    value2.entitiesnode.hashtags.forEach(myFunction);
+                    function myFunction(item, index) {
+                        //AllHashTags.push(value2.entitiesnode.hashtags[index].text);                   }
+                        file1.push(item.text);
+                    }
+                }
             }
         }
     }

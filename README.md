@@ -35,3 +35,22 @@ Change id to id_str because JS will round off such a large number
 
 Total Records 
 3248
+
+04/29
+Total Records 3254
+
+5/8/2020
+Total Records 3330
+
+2018 total tweets
+1085
+
+2019 total tweets
+1745
+
+2018 total retweets
+45992
+
+2019 total retweets
+17162
+
