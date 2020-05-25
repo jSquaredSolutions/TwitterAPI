@@ -46,8 +46,7 @@
 </head>
 
 <body>
-  <img src="Capture.JPG" />
-  <div id="main" style="padding-left: 260px;">
+  <div id="main">
     <h2>Total Tweets for 2018: <span style='text-decoration: underline;'>1085</span></h2>
     <a href="DataVis2018.html" class="button--style-red">2018</a>
     <a href="DataVis2019.html" class="button--style-red">2019</a>
@@ -180,133 +179,51 @@
 
     </script>
     <h3>Top 10 hashtags used:</h3>
-    <div id="graphic2"></div>
-    <script>
-      var data = [
-        {
-          "name": "PublicHealth",
-          "value": 46
-        },
-        {
-          "name": "STEM",
-          "value": 41
-        },
-        {
-          "name": "EPAsbir",
-          "value": 36
-        },
-        {
-          "name": "EPAer",
-          "value": 31
-        },
-        {
-          "name": "SmokeSense",
-          "value": 28
-        },
-        {
-          "name": "SaferChemicalsResearch",
-          "value": 25
-        },
-        {
-          "name": "Comptox",
-          "value": 24
-        },
-        {
-          "name": "EPAp3",
-          "value": 22
-        },
-        {
-          "name": "EnviroAtlas",
-          "value": 20
-        },
-        {
-          "name": "CitizenScience",
-          "value": 19
-        }
-      ];
-
-      //sort bars based on value
-      data = data.sort(function (a, b) {
-        return d3.ascending(a.value, b.value);
-      })
-
-      //set up svg using margin conventions - we'll need plenty of room on the left for labels
-      var margin = {
-        top: 15,
-        right: 25,
-        bottom: 15,
-        left: 60
-      };
-
-      var width = 760 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
-
-      var svg = d3.select("#graphic2").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      var x = d3.scale.linear()
-        .range([0, width])
-        .domain([0, d3.max(data, function (d) {
-          return d.value;
-        })]);
-
-      var y = d3.scale.ordinal()
-        .rangeRoundBands([height, 0], .1)
-        .domain(data.map(function (d) {
-          return d.name;
-        }));
-
-      //make y axis to show bar names
-      var yAxis = d3.svg.axis()
-        .scale(y)
-        //no tick marks
-        .tickSize(0)
-        .orient("left");
-
-      var gy = svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-
-      var bars = svg.selectAll(".bar")
-        .data(data)
-        .enter()
-        .append("g")
-
-      //append rects
-      bars.append("rect")
-        .attr("class", "bar3")
-        .attr("y", function (d) {
-          return y(d.name);
-        })
-        .attr("height", y.rangeBand())
-        .attr("x", 0)
-        .attr("width", function (d) {
-          return x(d.value);
-        });
-
-      //add a value label to the right of each bar
-      bars.append("text")
-        .attr("class", "label")
-        //y position of the label is halfway down the bar
-        .attr("y", function (d) {
-          return y(d.name) + y.rangeBand() / 2 + 4;
-        })
-        //x position is 3 pixels to the right of the bar
-        .attr("x", function (d) {
-          return x(d.value) + 3;
-        })
-        .text(function (d) {
-          return d.value;
-        });
-
-    </script>
     <div id="graphic3"></div>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
-
+      var data2 = [
+    {
+        "date": "PublicHealth",
+        "value": 46
+    },
+    {
+        "date": "STEM",
+        "value": 41
+    },
+    {
+        "date": "EPAsbir",
+        "value": 36
+    },
+    {
+        "date": "EPAer",
+        "value": 31
+    },
+    {
+        "date": "SmokeSense",
+        "value": 28
+    },
+    {
+        "date": "SaferChemicalsResearch",
+        "value": 25
+    },
+    {
+        "date": "Comptox",
+        "value": 24
+    },
+    {
+        "date": "EPAp3",
+        "value": 22
+    },
+    {
+        "date": "EnviroAtlas",
+        "value": 20
+    },
+    {
+        "date": "CitizenScience",
+        "value": 19
+    }
+];
       // set the dimensions and margins of the graph
       var margin = { top: 20, right: 20, bottom: 30, left: 40 },
         width = 960 - margin.left - margin.right,
@@ -330,22 +247,15 @@
         .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-      // get the data
-      d3.json("HashTags2018.json", function (error, data) {
-        if (error) throw error;
-
-        // format the data
-        data.forEach(function (d) {
-          d.sales = +d.sales;
-        });
+      
 
         // Scale the range of the data in the domains
-        x.domain(data.map(function (d) { return d.date; }));
-        y.domain([0, d3.max(data, function (d) { return d.value; })]);
+        x.domain(data2.map(function (d) { return d.date; }));
+        y.domain([0, d3.max(data2, function (d) { return d.value; })]);
 
         // append the rectangles for the bar chart
         svg.selectAll(".bar")
-          .data(data)
+          .data(data2)
           .enter().append("rect")
           .attr("class", "bar2")
           .attr("x", function (d) { return x(d.date); })
@@ -362,14 +272,16 @@
           .attr("x", 9)
           .attr("dy", ".35em")
           .attr("transform", "rotate(45)")
-          .style("text-anchor", "start");
+          .style("text-anchor", "start")
+          .style("font-size","12px");
 
         // add the y Axis
         svg.append("g")
           .call(d3.axisLeft(y));
-
-      });
+      
+      document.querySelector("#graphic > svg > g > g:nth-child(11) > rect").setAttribute("width","600");
+      document.querySelector("#graphic > svg > g > g:nth-child(11) > text").setAttribute("x","605");
     </script>
   </div>
-  <img src="Capture2.JPG" style="padding-top: 70px;" />
+  
 </body>
